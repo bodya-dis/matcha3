@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Cloud Matcha</title>
+  <meta name="description" content="Cloud Matcha — choose your matcha, milk and favourite flavours. Matcha from Japan, 25 flavours." />
+  <meta name="theme-color" content="#1f3a14" />
+  <!-- Page 3 (red gate). Self-contained. Fonts: Angkor + Inter only (SIL OFL, self-hosted). -->
+  <link rel="preload" as="font" type="font/woff2" href="fonts/angkor.woff2" crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href="fonts/inter-500.woff2" crossorigin />
+  <link rel="preload" as="image" href="assets/glass-strawberry.webp" />
+  <link rel="preload" as="image" href="assets/scene-dark.webp" />
+  <link rel="preload" as="image" href="assets/preloader-poster.webp" />
+  <link rel="stylesheet" href="styles.css" />
+  <script>document.documentElement.classList.add("js")</script>
+</head>
+<body class="is-loading">
+  <!-- ============ CUSTOM CURSOR (small ink seal + hieroglyph trail) ============ -->
+  <canvas class="cursor-canvas" id="cursorCanvas" aria-hidden="true"></canvas>
+
+  <!-- ============ PRELOADER (same film as pages 1–2) ============ -->
+  <div class="preloader" id="preloader" aria-label="Loading">
+    <div class="preloader__inner" id="preloaderInner">
+      <img class="preloader__scene" src="assets/scene-dark.webp" alt="" />
+      <video class="preloader__video" id="preloaderVideo" muted playsinline preload="auto"
+             poster="assets/preloader-poster.webp"
+             data-src-desktop="assets/preloader.mp4"
+             data-src-mobile="assets/preloader-720.mp4"></video>
+      <div class="preloader__vignette"></div>
+    </div>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <main class="hero" id="hero">
+    <!-- background: paper #f3ebd9 + Figma "image 189" landscape at 60%, faded in from the top -->
+    <div class="hero__bg" id="heroBg"><div class="land"><img src="assets/land.webp" alt="" /></div></div>
+
+    <div class="stage" id="stage">
+
+      <a class="logo a-top" href="#" aria-label="Cloud — home" data-intro="fade-down">
+        <img src="assets/logo-lockup.svg" alt="cloud" width="133" height="36" />
+      </a>
+
+      <div class="social a-top">
+        <a href="#" aria-label="WhatsApp" data-intro="pop">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <path d="M14.4544 14.001C12.8801 15.5753 9.25294 14.2335 7.4398 12.4204C5.62666 10.6072 4.2849 6.98005 5.85918 5.40576C6.31518 4.94976 6.94309 4.89548 7.32671 4.91357C7.54837 4.92353 7.74018 5.05381 7.86956 5.23476L8.7309 6.44172C8.85525 6.61601 8.91377 6.82875 8.89605 7.04212C8.87832 7.25549 8.7855 7.45567 8.63409 7.60705L7.8189 8.42224C7.96909 8.87462 8.45223 9.96033 9.17604 10.6841C9.89985 11.4079 10.9856 11.8911 11.4379 12.0413L12.2531 11.227C12.4044 11.0754 12.6045 10.9825 12.8179 10.9646C13.0313 10.9467 13.2441 11.005 13.4185 11.1293L14.6254 11.9906C14.8064 12.12 14.9367 12.3118 14.9466 12.5335C14.9647 12.9171 14.9104 13.545 14.4544 14.001Z" stroke="currentColor" stroke-width="0.86" stroke-linejoin="round"/>
+            <path d="M9.92859 19.4287C15.1753 19.4287 19.4286 15.1754 19.4286 9.9287C19.4286 4.68199 15.1753 0.428711 9.92859 0.428711C4.68187 0.428711 0.428589 4.68199 0.428589 9.9287C0.428589 11.6586 0.890922 13.2818 1.69978 14.6787L0.903589 18.9537L5.17859 18.1575C6.6221 18.9928 8.26085 19.4313 9.92859 19.4287Z" stroke="currentColor" stroke-width="0.86" stroke-linejoin="round"/>
+          </svg>
+          <span class="tag">WhatsApp</span>
+        </a>
+        <a href="#" aria-label="Instagram" data-intro="pop">
+          <svg viewBox="0 0 19 19" fill="none" aria-hidden="true" style="transform-origin:50% 50%">
+            <path d="M0.5 9.5C0.5 5.257 0.5 3.136 1.818 1.818C3.136 0.5 5.258 0.5 9.5 0.5C13.742 0.5 15.864 0.5 17.182 1.818C18.5 3.136 18.5 5.258 18.5 9.5C18.5 13.742 18.5 15.864 17.182 17.182C15.864 18.5 13.742 18.5 9.5 18.5C5.258 18.5 3.136 18.5 1.818 17.182C0.5 15.864 0.5 13.742 0.5 9.5Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14.875 4.25H14.75M13.5 9.5C13.5 10.5609 13.0786 11.5783 12.3284 12.3284C11.5783 13.0786 10.5609 13.5 9.5 13.5C8.43913 13.5 7.42172 13.0786 6.67157 12.3284C5.92143 11.5783 5.5 10.5609 5.5 9.5C5.5 8.43913 5.92143 7.42172 6.67157 6.67157C7.42172 5.92143 8.43913 5.5 9.5 5.5C10.5609 5.5 11.5783 5.92143 12.3284 6.67157C13.0786 7.42172 13.5 8.43913 13.5 9.5ZM15 4.25C15 4.3163 14.9737 4.37989 14.9268 4.42678C14.8799 4.47366 14.8163 4.5 14.75 4.5C14.6837 4.5 14.6201 4.47366 14.5732 4.42678C14.5263 4.37989 14.5 4.3163 14.5 4.25C14.5 4.1837 14.5263 4.12011 14.5732 4.07322C14.6201 4.02634 14.6837 4 14.75 4C14.8163 4 14.8799 4.02634 14.9268 4.07322C14.9737 4.12011 15 4.1837 15 4.25Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="tag">Instagram</span>
+        </a>
+      </div>
+
+      <nav class="nav a-top" aria-label="Main">
+        <a href="#" data-roll>Store</a>
+        <a href="#" data-roll>Menu</a>
+        <a href="#" data-roll>delivery</a>
+      </nav>
+
+      <!-- Big type (sits behind the roof, as in Figma) -->
+      <h1 class="title a-top" id="title" aria-label="Cloud Matcha"><span class="w">Cloud</span> <span class="w">Matcha</span></h1>
+
+      <!-- Gate: static frame, swinging bead strands (canvas, glyph rain on hover), plaque, pendants -->
+      <div class="gate a-top" id="gate">
+        <img class="gate__static" src="assets/arch-static.webp" alt="" />
+        <canvas class="gate__strands" id="strands" aria-hidden="true"></canvas>
+        <img class="gate__plaque" src="assets/plaque.webp" alt="" />
+        <div class="pend pend--left" data-pend="0.9"><img src="assets/pend-left.webp" alt="" /></div>
+        <div class="pend pend--inner" data-pend="1"><img src="assets/pend-inner.webp" alt="" /></div>
+        <div class="pend pend--scroll" data-pend="0.55">
+          <img src="assets/pend-scroll.webp" alt="" />
+          <div class="countdown" id="countdown" role="timer" aria-live="off" data-deadline="">
+            <div class="cd-unit"><span class="cd-num" data-unit="days">10</span><span class="cd-label">days</span></div>
+            <div class="cd-unit"><span class="cd-num" data-unit="hours">24</span><span class="cd-label">hr.</span></div>
+            <div class="cd-unit"><span class="cd-num" data-unit="minutes">32</span><span class="cd-label">min.</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass a-top" id="glass">
+        <img class="glass__img" src="assets/glass-strawberry.webp" alt="Strawberry matcha latte in a Cloud cup" width="538" height="881" />
+        <div class="glass__shine" aria-hidden="true"><i></i></div>
+      </div>
+
+      <!-- Flavour ribbon: one looped strip of cards that passes behind the gate.
+           Right part starts with the active flavour; left part shows the ones before it.
+           Cards are generated by main.js (Flavours module). -->
+      <section class="flavours" id="flavours" aria-label="Flavours">
+        <p class="rail-label rail-label--left a-mid">Choose your flavours <svg class="arr" viewBox="0 0 34 9" fill="none" aria-hidden="true"><path d="M0 4.5h33m0 0L29 .8M33 4.5 29 8.2" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
+        <div class="rail rail--left a-mid" data-rail="left" role="group" aria-label="Previous flavours"></div>
+        <button class="rail-label rail-label--right a-mid" type="button" id="railNext">Scroll for more <svg class="arr" viewBox="0 0 34 9" fill="none" aria-hidden="true"><path d="M0 4.5h33m0 0L29 .8M33 4.5 29 8.2" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="rail rail--right a-mid" data-rail="right" role="group" aria-label="Flavours, the first card is the selected one"></div>
+        <p class="sr-only" aria-live="polite" id="flavourLive"></p>
+      </section>
+
+      <div class="info info--left a-bot">
+        <p class="ln"><span>Our Location:</span></p>
+        <p class="ln"><span>Druzhby Narodov Ul., bld. 23</span></p>
+      </div>
+      <div class="info info--right a-bot">
+        <p class="ln"><span>Matcha from japan</span></p>
+        <p class="ln"><span>25 flavours</span></p>
+      </div>
+
+      <a class="book a-bot" href="#" id="book">
+        <img class="book__frame" src="assets/btn-ornament-green.svg" alt="" />
+        <span class="book__shine" aria-hidden="true"></span>
+        <span class="book__label" data-roll>Book spot</span>
+      </a>
+    </div>
+  </main>
+
+  <script src="main.js" defer></script>
+</body>
+</html>
