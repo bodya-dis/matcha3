@@ -42,6 +42,11 @@
         <img src="assets/logo-lockup.svg" alt="cloud" width="133" height="36" />
       </a>
 
+      <!-- phone header: burger opens the menu sheet (#mnav) -->
+      <button class="burger a-top" type="button" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="mnav">
+        <span></span><span></span><span></span>
+      </button>
+
       <div class="social a-top">
         <a href="#" aria-label="WhatsApp" data-intro="pop">
           <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -117,6 +122,19 @@
       </a>
     </div>
   </main>
+
+  <!-- phone menu sheet (hidden until the burger is tapped) -->
+  <div class="mnav" id="mnav" hidden>
+    <nav class="mnav__list" aria-label="Main">
+      <a href="#">Store</a>
+      <a href="#">Menu</a>
+      <a href="#">delivery</a>
+    </nav>
+    <div class="mnav__social">
+      <a href="#" aria-label="WhatsApp">WhatsApp</a>
+      <a href="#" aria-label="Instagram">Instagram</a>
+    </div>
+  </div>
 
   <script src="main.js" defer></script>
 </body>

@@ -269,7 +269,8 @@
   function filmCupRect() {
     const CUP = { x: 664.4, y: 129.3, w: 581.2, h: 952.0 }; // cup inside the 1920×1080 film
     const vw = innerWidth, vh = innerHeight;
-    const s = Math.max(vw / 1920, vh / 1080);
+    // phones show the whole film (contain); desktop fills the screen (cover)
+    const s = isMobileLayout() ? Math.min(vw / 1920, vh / 1080) : Math.max(vw / 1920, vh / 1080);
     const ox = (vw - 1920 * s) / 2, oy = (vh - 1080 * s) / 2;
     return { x: ox + CUP.x * s, y: oy + CUP.y * s, w: CUP.w * s, h: CUP.h * s };
   }
@@ -738,7 +739,7 @@
     let pos = 0, target = 0, activeK = 0, ready = false, snapT = 0;
 
     const geo = () => isMobileLayout()
-      ? { step: 121.6, w: 117.6, base: { right: 18, left: -999 } }
+      ? { step: 140, w: 132.3, h: 127.8, base: { right: 215 - 132.3 / 2, left: -999 } }   // centred carousel
       : { step: 152, w: 147 * VAR.k, h: 142 * VAR.k, base: { right: lines.inkR / unit() - INNER_R, left: lines.inkL / unit() + INNER_L + 5 } };
 
     function rollMarkup(text) {
@@ -879,16 +880,19 @@
         const visible = new Set();
         if (base > -999 && R.el.offsetWidth) {
           let kmin, kmax;
-          if (mobile) {
-            kmin = Math.ceil(pos + (leftU - g.w - base) / g.step);
-            kmax = Math.floor(pos + (rightU - base) / g.step);
+          if (mobile) { kmin = Math.floor(pos) - 3; kmax = Math.ceil(pos) + 3; 
           } else if (R.side === "right") { kmin = Math.floor(pos) - 1; kmax = Math.ceil(pos) + 7; }
           else { kmin = Math.floor(pos) - 8; kmax = Math.ceil(pos); }
           for (let k = kmin; k <= kmax; k++) {
             let tf, op = 1;
             if (mobile) {
-              const x = base + (k - pos) * g.step - leftU;
-              tf = `translate3d(${(x * u).toFixed(2)}px,0,0)`;
+              // selected card centred; neighbours step back: smaller, lower, tilted outward
+              const d = k - pos, ad = Math.min(Math.abs(d), 2.2);
+              const sc = 1 - 0.16 * Math.min(1, ad) - 0.06 * Math.max(0, ad - 1);
+              const x = base + d * g.step * (1 - 0.06 * Math.max(0, ad - 1)) - leftU;
+              const y = 10 * ad * ad;
+              const rot = clamp(d * 8, -16, 16);
+              tf = `translate3d(${(x * u).toFixed(2)}px,${(y * u).toFixed(2)}px,0) rotate(${rot.toFixed(2)}deg) scale(${sc.toFixed(3)})`;
             } else {
               const dir = R.side === "right" ? 1 : -1;
               const sIdx = R.side === "right" ? k - pos : (pos - 1) - k;      // 0 = card next to the gate
@@ -1067,6 +1071,32 @@
       }, delay + 200);
     }
     return { enter };
+  })();
+
+  /* ---------------------------------------------------- phone menu sheet */
+  (function Burger() {
+    const btn = $("#burger"), sheet = $("#mnav");
+    if (!btn || !sheet) return;
+    let open = false;
+    function set(v) {
+      open = v;
+      btn.setAttribute("aria-expanded", String(v));
+      btn.setAttribute("aria-label", v ? "Close menu" : "Open menu");
+      body.classList.toggle("menu-open", v);
+      if (v) {
+        sheet.hidden = false;
+        requestAnimationFrame(() => requestAnimationFrame(() => sheet.classList.add("is-open")));
+        setTimeout(() => $("a", sheet)?.focus({ preventScroll: true }), 350);
+      } else {
+        sheet.classList.remove("is-open");
+        setTimeout(() => { if (!open) sheet.hidden = true; }, 560);
+        btn.focus({ preventScroll: true });
+      }
+    }
+    btn.addEventListener("click", () => set(!open));
+    $$("a", sheet).forEach((a) => a.addEventListener("click", () => set(false)));
+    addEventListener("keydown", (e) => { if (e.key === "Escape" && open) set(false); });
+    addEventListener("resize", () => { if (open && !isMobileLayout()) set(false); });
   })();
 
   /* ------------------------------------------------------------ boot */
