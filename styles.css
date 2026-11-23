@@ -518,9 +518,9 @@ p { margin: 0; }
    very bottom. Layout frame 430 × 860; extra height goes between title and carousel. */
 @media (max-width: 1100px) and (orientation: portrait) {
   :root {
-    --vh: max(100vh, 860 * var(--u));
-    --vh: max(100svh, 860 * var(--u));
-    --ex: calc(var(--vh) - 860 * var(--u));
+    --vh: max(100vh, 900 * var(--u));
+    --vh: max(100svh, 900 * var(--u));
+    --ex: calc(var(--vh) - 900 * var(--u));
   }
   .nav, .social, .info { display: none; }
   .stage .burger { display: block; }
@@ -529,14 +529,17 @@ p { margin: 0; }
   .title .w { margin: 0 auto; }
 
   /* the gate STANDS on the ground band: stairs end exactly on its top edge (y 764) */
-  .gate { --au: calc(var(--u) * .40); left: calc(-11 * var(--u)); top: calc(401 * var(--u) + var(--ex)); }
+  /* bigger gate (×1.1), still standing at the bottom: stairs end on y 804 */
+  .gate { --au: calc(var(--u) * .44); left: calc(-34 * var(--u)); top: calc(405 * var(--u) + var(--ex)); }
+  /* the scroll with the countdown moves in from the cut-off right edge */
+  .pend--scroll { left: calc(1003 * var(--au) - 38 * var(--u)); }
   /* bigger cup (135 units, was 111), foot on the top step */
-  .glass { left: calc(147.5 * var(--u)); top: calc(525 * var(--u) + var(--ex)); width: calc(135 * var(--u)); height: calc(221 * var(--u)); }
+  .glass { left: calc(140.75 * var(--u)); top: calc(541.4 * var(--u) + var(--ex)); width: calc(148.5 * var(--u)); height: calc(243 * var(--u)); }
 
   /* the gate stands on the landscape: only a soft contact shadow under the stairs */
   .ground {
     display: block; position: absolute; left: 0; right: 0; height: 0;
-    top: calc(764 * var(--u) + var(--ex)); z-index: 5;
+    top: calc(804 * var(--u) + var(--ex)); z-index: 5;
   }
   .ground::before {
     content: ""; position: absolute; left: 50%; top: calc(-10 * var(--u)); width: calc(330 * var(--u)); height: calc(22 * var(--u));
@@ -545,12 +548,12 @@ p { margin: 0; }
   }
   .ground__note {
     display: block; position: absolute; left: 0; right: 0; z-index: 26; margin: 0; text-align: center;
-    top: calc(836 * var(--u) + var(--ex));
+    top: calc(878 * var(--u) + var(--ex));
     font: 500 calc(12 * var(--u))/1 var(--font-ui); letter-spacing: calc(-.3 * var(--u)); text-transform: uppercase;
-    color: var(--ink);
+    color: #fff9eb; text-shadow: 0 1px 2px rgba(1, 42, 15, .9), 0 0 10px rgba(1, 42, 15, .7);   /* readable over the trees */
   }
   /* button on the ground, centred */
-  .book { left: calc(100 * var(--u)); top: calc(772 * var(--u) + var(--ex)); width: calc(230 * var(--u)); height: calc(61 * var(--u)); }
+  .book { left: calc(100 * var(--u)); top: calc(812 * var(--u) + var(--ex)); width: calc(230 * var(--u)); height: calc(61 * var(--u)); }
   .book__label { top: calc(26.5 * var(--u)); font-size: calc(15 * var(--u)); }
 
   /* helper line above the flavours + dots under them */
@@ -655,11 +658,8 @@ p { margin: 0; }
 /* phone: the Figma landscape becomes the ground — full-bleed under the gate, pond + bridge +
    pagoda framed by the gate, faded into the paper at the top */
 @media (max-width: 1100px) and (orientation: portrait) {
-  .land {
-    left: 0; transform: none; width: 100%;
-    top: auto; bottom: 0; height: calc(500 * var(--u));
-  }
-  .land img { width: 100%; height: 100%; object-fit: cover; object-position: 66% 100%; opacity: .75; }
-  .land::before { top: 0; height: calc(170 * var(--u)); }
+  /* vertical background made for phones, full strength, anchored to the bottom */
+  .land { display: none; }
+  .hero__bg { background: var(--cream) url("assets/bg-mobile.webp") 50% 100% / cover no-repeat; }
   .mv-m3 .dots { display: none; }
 }
