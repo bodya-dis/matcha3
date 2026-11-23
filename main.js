@@ -266,11 +266,14 @@
   }
 
   /* --------------------------------------------------------------- 4 */
+  /** keep in sync with .preloader__video width on phones: min(170vw, 140vh) */
+  const phoneFilmW = () => Math.min(1.7 * innerWidth, 1.4 * innerHeight);
   function filmCupRect() {
     const CUP = { x: 664.4, y: 129.3, w: 581.2, h: 952.0 }; // cup inside the 1920×1080 film
     const vw = innerWidth, vh = innerHeight;
-    // phones show the whole film (contain); desktop fills the screen (cover)
-    const s = isMobileLayout() ? Math.min(vw / 1920, vh / 1080) : Math.max(vw / 1920, vh / 1080);
+    // phones: the film is drawn filmW wide (cup ≈ 62% of the screen width) over a fullscreen
+    // backdrop of the same scene; desktop fills the screen (cover)
+    const s = isMobileLayout() ? phoneFilmW() / 1920 : Math.max(vw / 1920, vh / 1080);
     const ox = (vw - 1920 * s) / 2, oy = (vh - 1080 * s) / 2;
     return { x: ox + CUP.x * s, y: oy + CUP.y * s, w: CUP.w * s, h: CUP.h * s };
   }
@@ -279,7 +282,7 @@
     let still = null;
     if (filmResult !== "ended") {
       still = document.createElement("img");
-      still.src = ASSETS.last; still.className = "preloader__scene"; still.alt = "";
+      still.src = ASSETS.last; still.className = "preloader__video is-on"; still.alt = "";
       preloaderInner.insertBefore(still, preloaderInner.querySelector(".preloader__vignette"));
       video.classList.remove("is-on");
     }
@@ -731,6 +734,24 @@
     if (sw) $$("a", sw).forEach((a) => a.classList.toggle("is-on", a.dataset.v === id));
   }
   applyVariant();
+
+  /* Phone hero variants (review): #m1 wheel of fruit badges, #m2 name tabs, #m3 cards.
+     Desktop variants (#v0–#v3) are untouched. */
+  const PHONE = {
+    m1: { cu: 0.62, step: 100, label: "Wheel" },
+    m2: { cu: 0.8,  step: 158, label: "Tabs" },
+    m3: { cu: 0.8,  step: 128, label: "Cards" },
+  };
+  const DEFAULT_PHONE = "m1";
+  let PV = DEFAULT_PHONE;
+  function applyPhone() {
+    const h = location.hash.slice(1);
+    PV = PHONE[h] ? h : (PHONE[PV] ? PV : DEFAULT_PHONE);
+    Object.keys(PHONE).forEach((k) => document.documentElement.classList.toggle("mv-" + k, k === PV));
+    document.documentElement.style.setProperty("--pcu", PHONE[PV].cu);
+  }
+  applyPhone();
+  addEventListener("hashchange", applyPhone);
   addEventListener("hashchange", applyVariant);
 
   function Flavours() {
@@ -739,7 +760,7 @@
     let pos = 0, target = 0, activeK = 0, ready = false, snapT = 0;
 
     const geo = () => isMobileLayout()
-      ? { step: 140, w: 132.3, h: 127.8, base: { right: 215 - 132.3 / 2, left: -999 } }   // centred carousel
+      ? { step: PHONE[PV].step, w: 147 * PHONE[PV].cu, h: 142 * PHONE[PV].cu, base: { right: 215 - 147 * PHONE[PV].cu / 2, left: -999 } }
       : { step: 152, w: 147 * VAR.k, h: 142 * VAR.k, base: { right: lines.inkR / unit() - INNER_R, left: lines.inkL / unit() + INNER_L + 5 } };
 
     function rollMarkup(text) {
@@ -886,12 +907,13 @@
           for (let k = kmin; k <= kmax; k++) {
             let tf, op = 1;
             if (mobile) {
-              // selected card centred; neighbours step back: smaller, lower, tilted outward
-              const d = k - pos, ad = Math.min(Math.abs(d), 2.2);
-              const sc = 1 - 0.16 * Math.min(1, ad) - 0.06 * Math.max(0, ad - 1);
-              const x = base + d * g.step * (1 - 0.06 * Math.max(0, ad - 1)) - leftU;
-              const y = 10 * ad * ad;
-              const rot = clamp(d * 8, -16, 16);
+              // selected item centred; the others step back (per phone variant)
+              const d = k - pos, ad = Math.min(Math.abs(d), 2.4);
+              let sc, y = 0, rot = 0;
+              if (PV === "m1") { sc = 1 - 0.22 * Math.min(1, ad) - 0.08 * Math.max(0, ad - 1); y = 13 * ad * ad; }
+              else if (PV === "m2") { sc = 1 - 0.3 * Math.min(1, ad); op = 1 - 0.5 * Math.min(1, ad); }
+              else { sc = 1 - 0.14 * Math.min(1, ad); }
+              const x = base + d * g.step - leftU;
               tf = `translate3d(${(x * u).toFixed(2)}px,${(y * u).toFixed(2)}px,0) rotate(${rot.toFixed(2)}deg) scale(${sc.toFixed(3)})`;
             } else {
               const dir = R.side === "right" ? 1 : -1;
@@ -911,6 +933,7 @@
             c.style.transform = tf;
             c.style.opacity = op < 1 ? op.toFixed(3) : "";
             c.classList.toggle("is-active", R.side === "right" && k === activeK);
+            c.style.zIndex = mobile ? String(10 - Math.round(Math.abs(k - pos) * 2)) : "";
           }
         }
         R.cards.forEach((c, k) => { if (!visible.has(k)) { c.remove(); R.cards.delete(k); } });
@@ -944,8 +967,11 @@
       live.textContent = `${f.name} selected`;
     }
 
+    const dots = $(".dots");
+    dots.innerHTML = FLAVOURS.map((f, i) => `<i${i ? "" : ' class="on"'}></i>`).join("");
     function setActive(k) {
       activeK = k;
+      $$("i", dots).forEach((d, i) => d.classList.toggle("on", i === mod(k, FLAVOURS.length)));
       const f = FLAVOURS[mod(k, FLAVOURS.length)];
       swapCup(f);
     }
