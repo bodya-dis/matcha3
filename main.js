@@ -740,9 +740,9 @@
   const PHONE = {
     m1: { cu: 0.62, step: 100, label: "Wheel" },
     m2: { cu: 0.8,  step: 158, label: "Tabs" },
-    m3: { cu: 0.8,  step: 128, label: "Cards" },
+    m3: { cu: 0.76, step: 124, label: "Cards" },
   };
-  const DEFAULT_PHONE = "m1";
+  const DEFAULT_PHONE = "m3";   // rectangles (cards) chosen
   let PV = DEFAULT_PHONE;
   function applyPhone() {
     const h = location.hash.slice(1);

@@ -468,7 +468,7 @@ p { margin: 0; }
 @media (max-width: 1100px) and (orientation: portrait) {
   /* one centred carousel: the selected card in the middle, neighbours smaller and tilted */
   .rail-label, .rail--left { display: none; }
-  .rail--right { --y: 268; left: calc(-1 * var(--side)); width: calc(430 * var(--u) + 2 * var(--side)); height: calc(160 * var(--u)); }
+  .rail--right { --y: 286; left: calc(-1 * var(--side)); width: calc(430 * var(--u) + 2 * var(--side)); height: calc(160 * var(--u)); }
   .card { --cu: calc(var(--u) * var(--pcu, .8)); top: calc(14 * var(--u)); transform-origin: 50% 50%; }
 }
 
@@ -525,7 +525,7 @@ p { margin: 0; }
   .nav, .social, .info { display: none; }
   .stage .burger { display: block; }
 
-  .title { --y: 74; left: 0 !important; width: calc(430 * var(--u)); text-align: center; }
+  .title { --y: 98; left: 0 !important; width: calc(430 * var(--u)); text-align: center; }
   .title .w { margin: 0 auto; }
 
   /* the gate STANDS on the ground band: stairs end exactly on its top edge (y 764) */
@@ -533,12 +533,10 @@ p { margin: 0; }
   /* bigger cup (135 units, was 111), foot on the top step */
   .glass { left: calc(147.5 * var(--u)); top: calc(525 * var(--u) + var(--ex)); width: calc(135 * var(--u)); height: calc(221 * var(--u)); }
 
-  /* ground band: dark matcha plinth with a contact shadow under the stairs */
+  /* the gate stands on the landscape: only a soft contact shadow under the stairs */
   .ground {
-    display: block; position: absolute; left: calc(-1 * var(--side)); right: calc(-1 * var(--side));
-    top: calc(764 * var(--u) + var(--ex)); bottom: calc(-1 * var(--ex) - 200px); z-index: 7;
-    background: linear-gradient(#21380f, #012a0f 40%);
-    box-shadow: inset 0 1px 0 rgba(249, 217, 151, .35);
+    display: block; position: absolute; left: 0; right: 0; height: 0;
+    top: calc(764 * var(--u) + var(--ex)); z-index: 5;
   }
   .ground::before {
     content: ""; position: absolute; left: 50%; top: calc(-10 * var(--u)); width: calc(330 * var(--u)); height: calc(22 * var(--u));
@@ -549,7 +547,7 @@ p { margin: 0; }
     display: block; position: absolute; left: 0; right: 0; z-index: 26; margin: 0; text-align: center;
     top: calc(836 * var(--u) + var(--ex));
     font: 500 calc(12 * var(--u))/1 var(--font-ui); letter-spacing: calc(-.3 * var(--u)); text-transform: uppercase;
-    color: #f3ebd9; opacity: .85;
+    color: var(--ink);
   }
   /* button on the ground, centred */
   .book { left: calc(100 * var(--u)); top: calc(772 * var(--u) + var(--ex)); width: calc(230 * var(--u)); height: calc(61 * var(--u)); }
@@ -558,7 +556,7 @@ p { margin: 0; }
   /* helper line above the flavours + dots under them */
   .swipe-hint {
     display: block; position: absolute; left: 0; right: 0; margin: 0; text-align: center; z-index: 20;
-    top: calc(256 * var(--u) + var(--ex) / 2);
+    top: calc(276 * var(--u) + var(--ex) / 2);
     font: 500 calc(13 * var(--u))/1 var(--font-ui); letter-spacing: calc(-.5 * var(--u)); text-transform: uppercase; color: var(--ink);
   }
   .dots { display: flex; position: absolute; left: 0; right: 0; justify-content: center; gap: 6px; z-index: 20; top: calc(406 * var(--u) + var(--ex) / 2); }
@@ -653,3 +651,15 @@ p { margin: 0; }
 .mnav.is-open .mnav__social a { transition-delay: .4s; }
 .mnav a:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .mnav, .mnav a { transition: none !important; } }
+
+/* phone: the Figma landscape becomes the ground — full-bleed under the gate, pond + bridge +
+   pagoda framed by the gate, faded into the paper at the top */
+@media (max-width: 1100px) and (orientation: portrait) {
+  .land {
+    left: 0; transform: none; width: 100%;
+    top: auto; bottom: 0; height: calc(500 * var(--u));
+  }
+  .land img { width: 100%; height: 100%; object-fit: cover; object-position: 66% 100%; opacity: .75; }
+  .land::before { top: 0; height: calc(170 * var(--u)); }
+  .mv-m3 .dots { display: none; }
+}
