@@ -130,7 +130,9 @@
     return new Promise((resolve) => {
       if (reduceMotion) { progress.video = 1; return resolve("skipped"); }
       video.muted = true;
-      video.src = innerWidth <= 900 ? video.dataset.srcMobile : video.dataset.srcDesktop;
+      // phones in portrait get the vertical film (1080×2336 master, 720 wide here)
+      if (isMobileLayout()) { video.poster = "assets/preloader-mobile-poster.webp"; video.src = "assets/preloader-mobile.mp4"; }
+      else video.src = innerWidth <= 900 ? video.dataset.srcMobile : video.dataset.srcDesktop;
       let settled = false;
       const finish = (why) => { if (!settled) { settled = true; progress.video = 1; resolve(why); } };
       video.addEventListener("canplay", () => {
@@ -266,15 +268,15 @@
   }
 
   /* --------------------------------------------------------------- 4 */
-  /** keep in sync with .preloader__video width on phones: min(170vw, 140vh) */
-  const phoneFilmW = () => Math.min(1.7 * innerWidth, 1.4 * innerHeight);
+  /** Where the cup sits inside the film, in film pixels, and how the film is fitted (cover). */
   function filmCupRect() {
-    const CUP = { x: 664.4, y: 129.3, w: 581.2, h: 952.0 }; // cup inside the 1920×1080 film
+    const mobile = isMobileLayout();
+    const FW = mobile ? 1080 : 1920, FH = mobile ? 2336 : 1080;
+    // glass sprite box inside the last frame (measured against glass-strawberry.webp)
+    const CUP = mobile ? { x: 236, y: 578, w: 596, h: 976 } : { x: 664.4, y: 129.3, w: 581.2, h: 952.0 };
     const vw = innerWidth, vh = innerHeight;
-    // phones: the film is drawn filmW wide (cup ≈ 62% of the screen width) over a fullscreen
-    // backdrop of the same scene; desktop fills the screen (cover)
-    const s = isMobileLayout() ? phoneFilmW() / 1920 : Math.max(vw / 1920, vh / 1080);
-    const ox = (vw - 1920 * s) / 2, oy = (vh - 1080 * s) / 2;
+    const s = Math.max(vw / FW, vh / FH);
+    const ox = (vw - FW * s) / 2, oy = (vh - FH * s) / 2;
     return { x: ox + CUP.x * s, y: oy + CUP.y * s, w: CUP.w * s, h: CUP.h * s };
   }
 
@@ -282,7 +284,7 @@
     let still = null;
     if (filmResult !== "ended") {
       still = document.createElement("img");
-      still.src = ASSETS.last; still.className = "preloader__video is-on"; still.alt = "";
+      still.src = isMobileLayout() ? "assets/preloader-mobile-last.webp" : ASSETS.last; still.className = "preloader__video is-on"; still.alt = "";
       preloaderInner.insertBefore(still, preloaderInner.querySelector(".preloader__vignette"));
       video.classList.remove("is-on");
     }
@@ -300,7 +302,7 @@
     glass.style.transform = from;
     await glass.animate([{ opacity: 0 }, { opacity: 1 }], { duration: reduceMotion ? 10 : 220, easing: "ease-out", fill: "both" }).finished;
     const endFrame = document.createElement("img");
-    endFrame.src = ASSETS.end; endFrame.className = "preloader__scene"; endFrame.alt = "";
+    endFrame.src = isMobileLayout() ? "assets/scene-dark.webp" : ASSETS.end;   // backdrop without the cup endFrame.className = "preloader__scene"; endFrame.alt = "";
     preloaderInner.insertBefore(endFrame, preloaderInner.querySelector(".preloader__vignette"));
     if (endFrame.decode) await endFrame.decode().catch(() => {});
     video.style.transition = "none";
