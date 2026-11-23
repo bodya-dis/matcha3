@@ -331,15 +331,27 @@ p { margin: 0; }
 .js body.is-loading .hero .nav .rl > b:first-child { transform: translateY(105%); }
 
 /* ================================ Mobile ================================ */
-@media (max-width: 760px) and (orientation: portrait) {
+@media (max-width: 1100px) and (orientation: portrait) {
+  /* Phones fill the width (no letterbox): 1 unit = 1px of a 430px-wide frame. If the visible
+     height is shorter than the 932-unit layout (Safari with its bars, iPhone SE), the hero
+     grows to its natural height and the page scrolls a little instead of shrinking. */
   :root {
-    --u: min(100vw / 430, 100vh / 932);
-    --u: min(100vw / 430, 100svh / 932);
+    --u: calc(100vw / 430);
+    --vh: max(100vh, 932 * var(--u));
+    --vh: max(100svh, 932 * var(--u));
     --ex: calc(var(--vh) - 932 * var(--u));
     --side: calc((100vw - 430 * var(--u)) / 2);
     --au: calc(var(--u) * .38);
   }
   .stage { width: calc(430 * var(--u)); margin-left: calc(-215 * var(--u)); }
+  body { overflow-x: hidden; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .hero { min-height: var(--vh); }
+
+  /* comfortable tap targets (≥ 44 px, WCAG 2.5.5) */
+  .social a { min-width: 44px; min-height: 44px; }
+  .nav a { padding: 12px 0; margin: -12px 0; }
+  .rail-label--right { padding: 12px 0; margin-top: -12px; }
+  .card__note { font-size: max(11px, calc(10 * var(--cu))); }
 
   .logo { --x: 18; --y: 16; }
   .logo img { width: calc(104 * var(--u)); height: calc(28.4 * var(--u)); }
@@ -367,6 +379,20 @@ p { margin: 0; }
   .info--left { --x: 18; }
   .info--right { right: calc(18 * var(--u) - var(--side) * .5); }
 }
+
+/* Portrait tablets (iPad etc.): same column layout, scaled by height so it stays one screen,
+   centred with the landscape filling the sides */
+@media (min-width: 761px) and (max-width: 1100px) and (orientation: portrait) {
+  :root {
+    --u: min(100vw / 430, 100vh / 932);
+    --u: min(100vw / 430, 100svh / 932);
+    --vh: 100vh;
+    --vh: 100svh;
+    --side: calc((100vw - 430 * var(--u)) / 2);
+  }
+}
+
+
 
 /* ============================ FLAVOURS ============================= */
 /* Two windows onto one looped ribbon of cards; card x is set by JS (Figma: cards 147×142,
@@ -439,7 +465,7 @@ p { margin: 0; }
   transform: translate(-50%, -50%) scale(0);
 }
 
-@media (max-width: 760px) and (orientation: portrait) {
+@media (max-width: 1100px) and (orientation: portrait) {
   .rail-label--left, .rail--left { display: none; }
   .rail-label--right { --x: 18; --y: 572; font-size: calc(14 * var(--u)); letter-spacing: calc(-.7 * var(--u)); }
   .rail-label .arr { width: calc(26 * var(--u)); }
@@ -453,7 +479,7 @@ p { margin: 0; }
 .arc-label { fill: var(--ink); font-family: var(--font-ui); font-weight: 500; text-transform: uppercase; }
 .arc-arrow { fill: none; stroke: var(--ink); stroke-width: 1px; stroke-linecap: round; }
 .arc-label--right { pointer-events: auto; cursor: pointer; }
-@media (max-width: 760px) and (orientation: portrait) { .arc-labels { display: none; } }
+@media (max-width: 1100px) and (orientation: portrait) { .arc-labels { display: none; } }
 
 /* review-only variant switcher (shown only when the page is opened with #v0–#v3) */
 .vswitch {
@@ -468,4 +494,19 @@ p { margin: 0; }
 @media (prefers-reduced-motion: reduce) {
   .glass__shine { display: none; }
   .rl > b { transition: none; }
+}
+
+/* Touch screens: no sticky hover after a tap — hover looks only where a real pointer can hover */
+@media (hover: none) {
+  .card:hover { background: var(--card); border-color: rgba(9, 90, 35, .1); }
+  .card.is-active:hover { border-color: rgba(198, 12, 9, .8); }
+  .card:hover .card__img { transform: none; }
+  .social a:hover::after { clip-path: circle(0% at 50% 100%); }
+  .social a:hover::before { transform: none; border-color: currentColor; }
+  .social a:hover { color: var(--ink); }
+  .social a:hover svg { animation: none; }
+  .nav a:hover .rl > b, .book:hover .rl > b { transform: none; }
+  .book:hover { transform: none; filter: none; }
+  .book:active { transform: scale(.97); filter: brightness(.95); }
+  .card:active .card__in { transform: scale(.96); }
 }

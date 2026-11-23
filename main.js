@@ -13,6 +13,9 @@
    ===================================================================== */
 (() => {
   "use strict";
+  // the phone layout can scroll; always start the intro from the top
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  scrollTo(0, 0);
 
   /* --------------------------------------------------------------- 1 */
   const $ = (s, r = document) => r.querySelector(s);
@@ -25,7 +28,7 @@
   const DPR = () => Math.min(window.devicePixelRatio || 1, 2);
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = matchMedia("(pointer: fine)").matches;
-  const isMobileLayout = () => matchMedia("(max-width: 760px) and (orientation: portrait)").matches;
+  const isMobileLayout = () => matchMedia("(max-width: 1100px) and (orientation: portrait)").matches;
   const EASE_OUT = "cubic-bezier(.16,1,.3,1)";
   const EASE_IO = "cubic-bezier(.76,0,.24,1)";
   const wait = (ms) => new Promise((r) => setTimeout(r, ms));
