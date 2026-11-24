@@ -340,6 +340,7 @@
     preloader.classList.add("is-done");
     startGlare();
     flavours && flavours.start();   // cup swaps are allowed once the cup has landed
+    document.dispatchEvent(new Event("cm:ready"));
     video.pause();
     video.removeAttribute("src");
     video.load();
@@ -1119,7 +1120,7 @@
       if (v) {
         sheet.hidden = false;
         requestAnimationFrame(() => requestAnimationFrame(() => sheet.classList.add("is-open")));
-        setTimeout(() => $("a", sheet)?.focus({ preventScroll: true }), 350);
+        // focus stays on the burger, which is now the ✕ close button
       } else {
         sheet.classList.remove("is-open");
         setTimeout(() => { if (!open) sheet.hidden = true; }, 560);
@@ -1127,6 +1128,10 @@
       }
     }
     btn.addEventListener("click", () => set(!open));
+    // contacts layout option (?menu=a | ?menu=b); ?menu=… also opens the sheet once the intro is done
+    const q = new URLSearchParams(location.search).get("menu");
+    sheet.classList.toggle("mnav--b", q === "b");
+    if (q) document.addEventListener("cm:ready", () => setTimeout(() => set(true), 400), { once: true });
     // menu links close the sheet; "Contacts" scrolls to the contacts block inside it instead
     $$(".mnav__list a:not([data-contacts]), .mnav__social a", sheet).forEach((a) => a.addEventListener("click", () => set(false)));
     $("[data-contacts]", sheet).addEventListener("click", (e) => {
