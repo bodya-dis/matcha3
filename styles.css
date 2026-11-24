@@ -468,7 +468,7 @@ p { margin: 0; }
 @media (max-width: 1100px) and (orientation: portrait) {
   /* one centred carousel: the selected card in the middle, neighbours smaller and tilted */
   .rail-label, .rail--left { display: none; }
-  .rail--right { --y: 294; left: calc(-1 * var(--side)); width: calc(430 * var(--u) + 2 * var(--side)); height: calc(160 * var(--u)); }
+  .rail--right { --y: 272; left: calc(-1 * var(--side)); width: calc(430 * var(--u) + 2 * var(--side)); height: calc(160 * var(--u)); }
   .card { --cu: calc(var(--u) * var(--pcu, .8)); top: calc(14 * var(--u)); transform-origin: 50% 50%; }
 }
 
@@ -550,19 +550,27 @@ p { margin: 0; }
     display: block; position: absolute; left: 0; right: 0; z-index: 26; margin: 0; text-align: center;
     top: calc(246 * var(--u));   /* tagline right under CLOUD MATCHA, on the light sky */
     font: 500 calc(12 * var(--u))/1 var(--font-ui); letter-spacing: calc(-.3 * var(--u)); text-transform: uppercase;
-    font-size: calc(14 * var(--u)); color: var(--ink);
+    font-size: calc(14 * var(--u)); color: #012a0f;
+  }
+  /* point starter before the tagline */
+  .ground__note::before {
+    content: ""; display: inline-block; width: calc(6 * var(--u)); height: calc(6 * var(--u));
+    margin-right: calc(8 * var(--u)); vertical-align: .18em; border-radius: 50%; background: #012a0f;
   }
   /* button on the ground, centred */
   /* button between the flavours and the roof */
-  .book { left: calc(100 * var(--u)); top: calc(428 * var(--u) + var(--ex) * .75); width: calc(230 * var(--u)); height: calc(61 * var(--u)); }
+  .book { left: calc(100 * var(--u)); top: calc(432 * var(--u) + var(--ex) * .75); width: calc(230 * var(--u)); height: calc(61 * var(--u)); }
   .book__label { top: calc(26.5 * var(--u)); font-size: calc(15 * var(--u)); }
 
-  /* helper line above the flavours + dots under them */
+  /* swipe hint now sits UNDER the cards (the tagline stays under the title), with an arrow */
   .swipe-hint {
-    display: block; position: absolute; left: 0; right: 0; margin: 0; text-align: center; z-index: 20;
-    top: calc(284 * var(--u) + var(--ex) / 2);
-    font: 500 calc(13 * var(--u))/1 var(--font-ui); letter-spacing: calc(-.5 * var(--u)); text-transform: uppercase; color: var(--ink);
+    display: flex; position: absolute; left: 0; right: 0; margin: 0; z-index: 20;
+    justify-content: center; align-items: center; gap: calc(10 * var(--u));
+    top: calc(404 * var(--u) + var(--ex) / 2);
+    font: 500 calc(13 * var(--u))/1 var(--font-ui); letter-spacing: calc(-.5 * var(--u)); text-transform: uppercase; color: #012a0f;
   }
+  .swipe-hint .arr { width: calc(28 * var(--u)); height: calc(8 * var(--u)); animation: hint-nudge 1.8s var(--ease-out) infinite; }
+  @keyframes hint-nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateX(calc(6 * var(--u))); } }
   .dots { display: flex; position: absolute; left: 0; right: 0; justify-content: center; gap: 6px; z-index: 20; top: calc(406 * var(--u) + var(--ex) / 2); }
   .dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(1, 42, 15, .25); transition: background .3s, transform .3s; }
   .dots i.on { background: var(--red); transform: scale(1.3); }
