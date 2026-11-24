@@ -277,7 +277,12 @@
     const vw = innerWidth, vh = innerHeight;
     const s = Math.max(vw / FW, vh / FH);
     const ox = (vw - FW * s) / 2, oy = (vh - FH * s) / 2;
-    return { x: ox + CUP.x * s, y: oy + CUP.y * s, w: CUP.w * s, h: CUP.h * s };
+    const r = { x: ox + CUP.x * s, y: oy + CUP.y * s, w: CUP.w * s, h: CUP.h * s };
+    if (mobile) {   // .preloader__video is scaled 1.12 from its top-centre on phones
+      const K = 1.12, cx = vw / 2;
+      return { x: cx + (r.x - cx) * K, y: r.y * K, w: r.w * K, h: r.h * K };
+    }
+    return r;
   }
 
   async function revealHero(filmResult) {
