@@ -108,7 +108,7 @@
 
       <!-- phone: the ground the gate stands on (Book spot + note live on it) -->
       <div class="ground" aria-hidden="true"></div>
-      <p class="ground__note">Matcha from Japan · 25 flavours</p>
+      <p class="ground__note"><span>Matcha from Japan</span><span>25 flavours</span></p>
       <p class="swipe-hint" aria-hidden="true">Swipe for more flavours <svg class="arr" viewBox="0 0 34 9" fill="none"><path d="M0 4.5h33m0 0L29 .8M33 4.5 29 8.2" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
       <div class="dots" aria-hidden="true"></div>
 
@@ -131,15 +131,27 @@
 
   <!-- phone menu sheet (hidden until the burger is tapped) -->
   <div class="mnav" id="mnav" hidden>
-    <nav class="mnav__list" aria-label="Main">
-      <a href="#">Store</a>
-      <a href="#">Menu</a>
-      <a href="#">delivery</a>
-    </nav>
-    <div class="mnav__social">
-      <a href="#" aria-label="WhatsApp">WhatsApp</a>
-      <a href="#" aria-label="Instagram">Instagram</a>
+    <div class="mnav__top">
+      <img class="mnav__logo" src="assets/logo-lockup.svg" alt="cloud" width="104" height="28" />
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" class="lang__btn is-on" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" class="lang__btn" data-lang="ua" aria-pressed="false">UA</button>
+      </div>
     </div>
+    <nav class="mnav__list" aria-label="Main">
+      <a href="#"><i>01</i>Store</a>
+      <a href="#"><i>02</i>Menu</a>
+      <a href="#"><i>03</i>delivery</a>
+      <a href="#mnavContacts" data-contacts><i>04</i>Contacts</a>
+    </nav>
+    <section class="mnav__contacts" id="mnavContacts" aria-label="Contacts">
+      <p class="mnav__label">Our location</p>
+      <p class="mnav__addr">Druzhby Narodov Ul., bld. 23</p>
+      <div class="mnav__social">
+        <a href="#" aria-label="WhatsApp">WhatsApp</a>
+        <a href="#" aria-label="Instagram">Instagram</a>
+      </div>
+    </section>
   </div>
 
   <script src="main.js" defer></script>

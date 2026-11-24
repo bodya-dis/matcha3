@@ -1122,7 +1122,23 @@
       }
     }
     btn.addEventListener("click", () => set(!open));
-    $$("a", sheet).forEach((a) => a.addEventListener("click", () => set(false)));
+    // menu links close the sheet; "Contacts" scrolls to the contacts block inside it instead
+    $$(".mnav__list a:not([data-contacts]), .mnav__social a", sheet).forEach((a) => a.addEventListener("click", () => set(false)));
+    $("[data-contacts]", sheet).addEventListener("click", (e) => {
+      e.preventDefault();
+      const c = $("#mnavContacts");
+      c.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      c.classList.remove("is-flash"); void c.offsetWidth; c.classList.add("is-flash");
+    });
+    // language switch (EN / UA): remembers the choice; translations get wired in here
+    const langs = $$(".lang__btn", sheet);
+    function setLang(l) {
+      langs.forEach((b) => { const on = b.dataset.lang === l; b.classList.toggle("is-on", on); b.setAttribute("aria-pressed", String(on)); });
+      document.documentElement.lang = l === "ua" ? "uk" : "en";
+      try { localStorage.setItem("cm-lang", l); } catch (_) {}
+    }
+    langs.forEach((b) => b.addEventListener("click", () => setLang(b.dataset.lang)));
+    try { const l = localStorage.getItem("cm-lang"); if (l) setLang(l); } catch (_) {}
     addEventListener("keydown", (e) => { if (e.key === "Escape" && open) set(false); });
     addEventListener("resize", () => { if (open && !isMobileLayout()) set(false); });
   })();
