@@ -651,7 +651,7 @@ p { margin: 0; }
 /* the menu group (items → switch → contacts) is centred vertically between the header and the bottom */
 .mnav__list { display: flex; flex-direction: column; align-self: stretch; margin-top: auto; }
 .mnav__contacts { margin-bottom: auto; }
-.mnav > .lang { margin-top: 20px; }   /* extra air between the items and the language switch */
+.mnav > .lang { margin-top: 40px; }   /* extra air between the items and the language switch */
 .mnav__list a {
   display: block; padding: 12px 0;
   font-family: var(--font-display); font-size: 42px; line-height: 1.05; letter-spacing: -.01em;
@@ -668,10 +668,10 @@ p { margin: 0; }
   font: 500 13px/1 var(--font-ui); letter-spacing: -.02em; color: var(--on-sheet-dim); cursor: pointer;
   transition: background .25s, color .25s;
 }
-.lang__btn.is-on { background: var(--on-sheet); color: var(--sheet); }
+.lang__btn.is-on { background: var(--red); color: var(--on-sheet); }   /* red accent */
 @media (hover: hover) {
   .lang__btn:not(.is-on):hover { background: rgba(243, 235, 217, .12); color: var(--on-sheet); }
-  .mnav__social a:hover { background: var(--on-sheet); color: var(--sheet); border-color: var(--on-sheet); transform: translateY(-2px); }
+  .mnav__social a:hover { background: var(--red); color: var(--on-sheet); border-color: var(--red); transform: translateY(-2px); }
   .mnav__social a:hover svg { animation: icon-wiggle .45s var(--ease-out); }
 }
 .lang__btn:not(.is-on):active { background: rgba(243, 235, 217, .2); color: var(--on-sheet); }
@@ -680,7 +680,7 @@ p { margin: 0; }
 .mnav__contacts { display: flex; flex-direction: column; align-items: center; gap: 14px; opacity: 0; transition: opacity .4s; }
 .mnav__label { margin: 0; font: 500 11px/1 var(--font-ui); text-transform: uppercase; letter-spacing: .08em; color: var(--on-sheet-dim); }
 .mnav__addr { display: flex; align-items: center; gap: 8px; margin: 0; font: 500 16px/1.25 var(--font-ui); text-transform: uppercase; letter-spacing: -.03em; color: var(--on-sheet); }
-.mnav__addr .pin { width: 14px; height: 18px; flex: none; }
+.mnav__addr .pin { width: 14px; height: 18px; flex: none; color: #e8554f; }   /* red pin */
 .mnav__social { display: flex; gap: 12px; }
 .mnav__social a {
   display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%;
@@ -688,11 +688,11 @@ p { margin: 0; }
   transition: background .25s, color .25s, border-color .25s, transform .25s var(--ease-out);
 }
 .mnav__social a span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
-.mnav__social a:active { background: var(--on-sheet); color: var(--sheet); }
+.mnav__social a:active { background: var(--red); color: var(--on-sheet); border-color: var(--red); }
 .mnav__social svg { width: 20px; height: 20px; }
 
 /* option b: footer strip */
-.mnav--b .mnav__contacts {
+.mnav--b .mnav__contacts { border-top-color: rgba(198, 12, 9, .6) !important;
   flex-direction: row; align-items: center; justify-content: space-between; align-self: stretch;
   gap: 16px; padding-top: 20px; border-top: 1px solid var(--line); text-align: left;
 }
